@@ -79,13 +79,6 @@ while pagenum <21:
         else:
             foils.append('no')
 
-    #     try:
-    #         element.find_element_by_xpath('//*[contains(., "https://d17uu2v7oycgti.cloudfront.net/site_assets/isfoil.png")')
-    #         foils.append('yes')
-    #     except:
-    #         foils.append('no')
-    # print(foils)
-
     pagenum += 1
     if pagenum <21:
         browser.find_element_by_xpath('//*[@id="settings-panel"]/div[2]/ul/li[7]/a').click()
