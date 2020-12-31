@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import os
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.support.ui import Select
+# from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.options import Options
 from Kwargs import *
+from Config import *
 import time
 import json
 from datetime import datetime
@@ -21,8 +22,8 @@ options.add_argument('--incognito')
 options.add_argument('start-maximized')
 options.add_experimental_option("excludeSwitches", ['enable-automation'])
 
-options.binary_location = r'C:\Program Files (x86)\BraveSoftware\Brave-Browser\Application\brave.exe'
-browser = webdriver.Chrome(options = options, executable_path= r"C:\Users\allst\Documents\!Python\Programs\Selenium\chromedriver87.exe")
+options.binary_location = binary_location
+browser = webdriver.Chrome(options = options, executable_path= executable_path)
 
 pagenum = 1
 
