@@ -28,7 +28,6 @@ for v in MBprices.values():
     priceslist.append(v)
 MBlast = priceslist[-1]
 currentMB = CardPrice('https://api.scryfall.com/cards/8a720448-017f-4f4a-9501-678245eaed17')[1]
-print(MBlast, currentMB)
 
 if currentMB == MBlast:
     print('MB\'s price hasn\'t changed. Looking at LOTV.')
@@ -73,6 +72,5 @@ file1 = open('MTGPriceData.json', 'w')
 json.dump(data, file1)
 file1.close()
 
-print(data)
 print('Success!')
 
