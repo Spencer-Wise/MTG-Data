@@ -40,8 +40,6 @@ browser.find_element_by_xpath('//input[@class="btn btn-lg btn-primary"][@value="
 assert 'Your Cardhoarder Dashboard' in browser.title
 browser.find_element_by_xpath('//a[@href="/card-keeper"]').click()
 time.sleep(2)
-assert 'Card Keeper Tool' in browser.title
-time.sleep(2)
 elems = browser.find_elements_by_xpath(
     '//button[@class="btn btn-sm btn-default dropdown-toggle"][@data-toggle="dropdown"]')
 time.sleep(0.5)
