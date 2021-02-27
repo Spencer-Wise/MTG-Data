@@ -19,7 +19,6 @@ file1.close()
 
 sellcans = {}
 buycans = {}
-
 x = 60
 
 for card, dates in data.items():
