@@ -13,14 +13,19 @@ print('\n')
 today = datetime.now().date()
 # randomdate = date(2020, 1, 5)
 
-file1 = open('MTGPriceData.json')
+#grab Scryfall price data
+file1 = open('ScryfallPriceData.json')
 data = json.load(file1)
 file1.close()
 
+#establish dicts for buy candidates and sell candidates
 sellcans = {}
 buycans = {}
+
+#pick the number of days to perform analysis on
 x = 60
 
+#grab prices for each card and calculate the z score
 for card, dates in data.items():
     pricelist = [price for price in dates.values()]
     prices = [float(price) for price in pricelist]
@@ -31,16 +36,19 @@ for card, dates in data.items():
         zscore = (prices[-1]-avg)/std
     except ZeroDivisionError:
         zscore = 0
+    #if the zscore is above/below two std devs, add to the proper candidate list
     if zscore > 1.96:
         sellcans[card] = zscore
     if zscore < -1.96:
         buycans[card] = zscore
 
+#print the buy and sell candidates according to the Scryfall data
 print('Scryfall data:')
 print(f'Sell candidates- {sellcans}')
 print('\n')
 print(f'Buy candidates- {buycans}')
 
+#begin same process for MTGO Collection prices
 file2 = open('MTGOCollectionPrices.json')
 data2 = json.load(file2)
 file2.close()
