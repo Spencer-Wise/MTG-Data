@@ -15,20 +15,20 @@ today = datetime.now().date()
 
 #grab Scryfall price data
 file1 = open('ScryfallPriceData.json')
-data = json.load(file1)
+data1 = json.load(file1)
 file1.close()
 
 #establish dicts for buy candidates and sell candidates
-sellcans = {}
-buycans = {}
+sell_cans = {}
+buy_cans = {}
 
 #pick the number of days to perform analysis on
 x = 60
 
 #grab prices for each card and calculate the z score
-for card, dates in data.items():
-    pricelist = [price for price in dates.values()]
-    prices = [float(price) for price in pricelist]
+for card, dates in data1.items():
+    price_list = [price for price in dates.values()]
+    prices = [float(price) for price in price_list]
     prices = prices[-x:]
     avg = stats.mean(prices)
     std = stats.stdev(prices)
@@ -38,30 +38,30 @@ for card, dates in data.items():
         zscore = 0
     #if the zscore is above/below two std devs, add to the proper candidate list
     if zscore > 1.96:
-        sellcans[card] = zscore
+        sell_cans[card] = zscore
     if zscore < -1.96:
-        buycans[card] = zscore
+        buy_cans[card] = zscore
 
 #print the buy and sell candidates according to the Scryfall data
 print('Scryfall data:')
-print(f'Sell candidates- {sellcans}')
+print(f'Sell candidates- {sell_cans}')
 print('\n')
-print(f'Buy candidates- {buycans}')
+print(f'Buy candidates- {buy_cans}')
 
 #begin same process for MTGO Collection prices
 file2 = open('MTGOCollectionPrices.json')
 data2 = json.load(file2)
 file2.close()
 
-sellcans = {}
-buycans = {}
+sell_cans = {}
+buy_cans = {}
 
 for card, dates in data2.items():
-    datelist, pricelist = [date for date in dates.keys()], [price for price in dates.values()]
-    lastdate = datelist[-1].split('-')
-    lastdateformatted = date(int(lastdate[-1]), int(lastdate[0]), int(lastdate[1]))
-    delta = today - lastdateformatted
-    prices = [float(price) for price in pricelist]
+    date_list, price_list = [date for date in dates.keys()], [price for price in dates.values()]
+    last_date = date_list[-1].split('-')
+    last_date_formatted = date(int(last_date[-1]), int(last_date[0]), int(last_date[1]))
+    delta = today - last_date_formatted
+    prices = [float(price) for price in price_list]
     prices = prices[-x:]
     avg = stats.mean(prices)
     if len(prices) > 1:
@@ -73,12 +73,12 @@ for card, dates in data2.items():
     except ZeroDivisionError:
         zscore = 0
     if zscore > 1.96 and delta.days < 10:
-        sellcans[card] = zscore
+        sell_cans[card] = zscore
     if zscore < -1.96 and delta.days < 10:
-        buycans[card] = zscore
+        buy_cans[card] = zscore
 
 print('\n')
 print('Cardhoarder data:')
-print(f'Sell candidates- {sellcans}')
+print(f'Sell candidates- {sell_cans}')
 print('\n')
-print(f'Buy candidates- {buycans}')
+print(f'Buy candidates- {buy_cans}')

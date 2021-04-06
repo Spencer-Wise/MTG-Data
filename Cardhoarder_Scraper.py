@@ -29,7 +29,7 @@ options.binary_location = binary_location
 browser = webdriver.Chrome(options = options, executable_path= executable_path)
 
 #set variable to keep track of pages
-pagenum = 1
+page_num = 1
 
 #start browser, navigate to Cardhoarder, log in, select/deselect filters
 browser.execute_script(f"window.open('{chLink}')")
@@ -65,7 +65,7 @@ sets = []
 foils = []
 
 #run through each page and grab the price data
-while pagenum <21:
+while page_num <21:
     time.sleep(3)
     elems = browser.find_elements_by_xpath('//*[@id="cards-table"]/tbody/tr/td/a')
     for element in elems:
@@ -87,36 +87,36 @@ while pagenum <21:
             foils.append('no')
 
     #unless on the last page, navigate to the next page and start the process over
-    pagenum += 1
-    if pagenum <21:
+    page_num += 1
+    if page_num <21:
         browser.find_element_by_xpath('//*[@id="settings-panel"]/div[2]/ul/li[7]/a').click()
     else:
         pass
 
 #establish dictionary
-bigdict = {}
-bigdict['cards'] = cards
-bigdict['sets'] = sets
-bigdict['foils'] = foils
-bigdict['prices'] = prices
+pulled_card_data = {}
+pulled_card_data['cards'] = cards
+pulled_card_data['sets'] = sets
+pulled_card_data['foils'] = foils
+pulled_card_data['prices'] = prices
 
 #format the new data and add it to the previous data from json
 for i in range(0, len(cards)):
-    if bigdict['foils'][i] == 'yes':
-        name = bigdict['cards'][i]
-        set = bigdict['sets'][i]
-        price = bigdict['prices'][i]
-        cardname = f'{name} - {set} (foil)'
+    if pulled_card_data['foils'][i] == 'yes':
+        name = pulled_card_data['cards'][i]
+        set = pulled_card_data['sets'][i]
+        price = pulled_card_data['prices'][i]
+        card_name = f'{name} - {set} (foil)'
     else:
-        name = bigdict['cards'][i]
-        set = bigdict['sets'][i]
-        price = bigdict['prices'][i]
-        cardname = f'{name} - {set}'
+        name = pulled_card_data['cards'][i]
+        set = pulled_card_data['sets'][i]
+        price = pulled_card_data['prices'][i]
+        card_name = f'{name} - {set}'
     try:
-        data[cardname][today] = price
+        data[card_name][today] = price
     except:
-        data[cardname] = {}
-        data[cardname][today] = price
+        data[card_name] = {}
+        data[card_name][today] = price
 
 #dump the new data back to the json
 file1 = open('MTGOCollectionPrices.json', 'w')
