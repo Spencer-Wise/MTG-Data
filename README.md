@@ -8,3 +8,13 @@ The MTG_Data_Analysis.py file is really the main file to run, it does everything
     and then it does basic Z-score analysis on the card prices to develop a list of buy and sell candidates.
   
 The data I have collected may not be used for commercial use.
+
+Config and Password file specifics:
+Config.py should contain:
+executable_path = '<file path to chromedriver.exe>'
+binary_location = '<file path to browser.exe>' 
+
+Passwords.py should contain:
+ch_link = '<link to Cardhoarder's login page>'
+ch_user = '<Cardhoarder user email address>'
+ch_pw = '<Cardhoarder password>'
