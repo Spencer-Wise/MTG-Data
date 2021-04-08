@@ -32,15 +32,15 @@ browser = webdriver.Chrome(options = options, executable_path= executable_path)
 page_num = 1
 
 #start browser, navigate to Cardhoarder, log in, select/deselect filters
-browser.execute_script(f"window.open('{chLink}')")
+browser.execute_script(f"window.open('{ch_link}')")
 handles = browser.window_handles
 browser.switch_to.window(handles[-1])
 elem = browser.find_element_by_id('UserEmail')
 elem.clear()
-elem.send_keys(chUser)
+elem.send_keys(ch_user)
 elem = browser.find_element_by_id('UserPassword')
 elem.clear()
-elem.send_keys(chPw)
+elem.send_keys(ch_pw)
 browser.find_element_by_xpath('//input[@class="btn btn-lg btn-primary"][@value="Log In"]').click()
 assert 'Your Cardhoarder Dashboard' in browser.title
 browser.find_element_by_xpath('//a[@href="/card-keeper"]').click()
