@@ -8,8 +8,8 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-import Cardhoarder_Scraper
-import Scryfall_API
+# import Cardhoarder_Scraper
+# import Scryfall_API
 
 print('\n')
 
@@ -45,6 +45,10 @@ for card, dates in scryfall_data.items():
     if zscore < -1.96:
         scryfall_buy_cans[card] = zscore
 
+# create sorted lists
+scryfall_sell_cans_sorted = sorted(scryfall_sell_cans, key=lambda k:scryfall_sell_cans[k], reverse=True)
+scryfall_buy_cans_sorted = sorted(scryfall_buy_cans, key=lambda k: scryfall_buy_cans[k])
+
 #print the buy and sell candidates according to the Scryfall data
 print('Scryfall data:')
 print(f'Sell candidates- {scryfall_sell_cans}')
@@ -75,10 +79,14 @@ for card, dates in mtgo_data.items():
         zscore = (prices[-1] - avg) / std
     except ZeroDivisionError:
         zscore = 0
-    if zscore > 1.96 and delta.days < 10:
+    if zscore > 1.96 and delta.days < 10 and prices[-1] > 0.10:
         mtgo_sell_cans[card] = zscore
-    if zscore < -1.96 and delta.days < 10:
+    if zscore < -1.96 and delta.days < 10 and prices[-1 > 0.10]:
         mtgo_buy_cans[card] = zscore
+
+# create sorted lists
+mtgo_sell_cans_sorted = sorted(mtgo_sell_cans, key=lambda k: mtgo_sell_cans[k], reverse=True)
+mtgo_buy_cans_sorted = sorted(mtgo_buy_cans, key=lambda k: mtgo_buy_cans[k])
 
 print('\n')
 print('Cardhoarder data:')
@@ -98,10 +106,10 @@ frm_scryfall.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
 lbl_scryfall_title = tk.Label(master=frm_scryfall, text='Scryfall data:', font='bold', fg='steel blue')
 lbl_scryfall_title.pack()
 
-lbl_scryfall_sell_cans = tk.Label(master=frm_scryfall, text=f'Sell candidates - {scryfall_sell_cans}', wraplength=1440, justify='left')
+lbl_scryfall_sell_cans = tk.Label(master=frm_scryfall, text=f'Sell candidates - {scryfall_sell_cans_sorted}', wraplength=1440, justify='left')
 lbl_scryfall_sell_cans.pack()
 
-lbl_scryfall_buy_cans = tk.Label(master=frm_scryfall, text=f'Buy candidates - {scryfall_buy_cans}', wraplength=1440, justify='left')
+lbl_scryfall_buy_cans = tk.Label(master=frm_scryfall, text=f'Buy candidates - {scryfall_buy_cans_sorted}', wraplength=1440, justify='left')
 lbl_scryfall_buy_cans.pack()
 
 frm_mtgo = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5)
@@ -110,10 +118,10 @@ frm_mtgo.grid(row=1, column=1, sticky='nsew', padx=10, pady=10)
 lbl_mtgo_title = tk.Label(master=frm_mtgo, text='MTGO data:', font='bold', fg='steel blue')
 lbl_mtgo_title.pack()
 
-lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans}', wraplength=1440, justify='left')
+lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans_sorted}', wraplength=1440, justify='left')
 lbl_mtgo_sell_cans.pack()
 
-lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans}', wraplength=1440, justify='left')
+lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans_sorted}', wraplength=1440, justify='left')
 lbl_mtgo_buy_cans.pack()
 
 # create, grab, and sort all cards from scryfall
