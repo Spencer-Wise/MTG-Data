@@ -7,32 +7,33 @@ from datetime import date
 import tkinter as tk
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# import Cardhoarder_Scraper
-# import Scryfall_API
+if input('Do you want to scrape data? (y/n) ').strip().lower() == 'y':
+    import Cardhoarder_Scraper
+    import Scryfall_API
 
 print('\n')
 
 today = datetime.now().date()
-# randomdate = date(2020, 1, 5)
 
-#grab Scryfall price data
+# grab Scryfall price data
 file1 = open('ScryfallPriceData.json')
 scryfall_data = json.load(file1)
 file1.close()
 
-#establish dicts for buy candidates and sell candidates
+# establish dicts for buy candidates and sell candidates
 scryfall_sell_cans = {}
 scryfall_buy_cans = {}
 
-#pick the number of days to perform analysis on
-x = 60
+# pick the number of days to perform analysis on
+days = 60
 
-#grab prices for each card and calculate the z score
+# grab prices for each card and calculate the z score
 for card, dates in scryfall_data.items():
     price_list = [price for price in dates.values()]
     prices = [float(price) for price in price_list]
-    prices = prices[-x:]
+    prices = prices[-days:]
     avg = stats.mean(prices)
     std = stats.stdev(prices)
     try:
@@ -69,7 +70,7 @@ for card, dates in mtgo_data.items():
     last_date_formatted = date(int(last_date[-1]), int(last_date[0]), int(last_date[1]))
     delta = today - last_date_formatted
     prices = [float(price) for price in price_list]
-    prices = prices[-x:]
+    prices = prices[-days:]
     avg = stats.mean(prices)
     if len(prices) > 1:
         std = stats.stdev(prices)
@@ -97,31 +98,40 @@ print(f'Buy candidates- {mtgo_buy_cans}')
 # set up Tkinter window, frames, labels
 window = tk.Tk()
 window.title('MTG Card Price Analysis')
-window.rowconfigure([0,1], weight=1)
+window.config(bg='white')
+window.rowconfigure([0, 1], weight=1)
 window.columnconfigure([1], weight=1)
 
-frm_scryfall = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5)
+# establish background and text colors
+bg_color = 'snow'
+fg_text = 'blue4'
+
+frm_scryfall = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5, bg=bg_color)
 frm_scryfall.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
 
-lbl_scryfall_title = tk.Label(master=frm_scryfall, text='Scryfall data:', font='bold', fg='steel blue')
+lbl_scryfall_title = tk.Label(master=frm_scryfall, text='Scryfall data:', font='bold', fg='steel blue', bg=bg_color)
 lbl_scryfall_title.pack()
 
-lbl_scryfall_sell_cans = tk.Label(master=frm_scryfall, text=f'Sell candidates - {scryfall_sell_cans_sorted}', wraplength=1440, justify='left')
+lbl_scryfall_sell_cans = tk.Label(master=frm_scryfall, text=f'Sell candidates - {scryfall_sell_cans_sorted}', wraplength=1440, justify='left',
+                                  bg=bg_color, fg=fg_text)
 lbl_scryfall_sell_cans.pack()
 
-lbl_scryfall_buy_cans = tk.Label(master=frm_scryfall, text=f'Buy candidates - {scryfall_buy_cans_sorted}', wraplength=1440, justify='left')
+lbl_scryfall_buy_cans = tk.Label(master=frm_scryfall, text=f'Buy candidates - {scryfall_buy_cans_sorted}', wraplength=1440, justify='left',
+                                 bg=bg_color, fg=fg_text)
 lbl_scryfall_buy_cans.pack()
 
-frm_mtgo = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5)
+frm_mtgo = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5, bg=bg_color)
 frm_mtgo.grid(row=1, column=1, sticky='nsew', padx=10, pady=10)
 
-lbl_mtgo_title = tk.Label(master=frm_mtgo, text='MTGO data:', font='bold', fg='steel blue')
+lbl_mtgo_title = tk.Label(master=frm_mtgo, text='MTGO data:', font='bold', fg='steel blue', bg=bg_color)
 lbl_mtgo_title.pack()
 
-lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans_sorted}', wraplength=1440, justify='left')
+lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
+                              fg=fg_text)
 lbl_mtgo_sell_cans.pack()
 
-lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans_sorted}', wraplength=1440, justify='left')
+lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
+                             fg=fg_text)
 lbl_mtgo_buy_cans.pack()
 
 # create, grab, and sort all cards from scryfall
@@ -134,8 +144,20 @@ scryfall_cards = sorted(scryfall_cards)
 starting_card = tk.StringVar()
 starting_card.set('Select a card to plot')
 
+# establish graph variables to be used in plotter function
+canvas = None
+fig, ax = plt.subplots(figsize=(20, 8))
+colors = ['blue', 'red', 'green', 'purple', 'darkorange', 'saddlebrown', 'slategrey', 'deepskyblue', 'gold']
+color_count = 0
+legend_tuple = ()
+
 def card_price_plotter(*args):
     '''Plots the price of a chosen card from the dropdown menu.'''
+    global canvas, fig, ax, color_count, legend_tuple
+    # clear the canvas if it is not empty
+    if canvas != None:
+        canvas._tkcanvas.destroy()
+
     # grab selected card from dropdown
     selected_card = starting_card.get()
     # grab data for selected card
@@ -151,22 +173,53 @@ def card_price_plotter(*args):
     for date in selected_card_dates:
         selected_card_dates_datetime.append(datetime.strptime(date, '%m-%d-%y'))
 
-    # create plot
-    fig, ax = plt.subplots(figsize=(20, 10))
-
     # plot dates, prices
-    ax.plot(selected_card_dates_datetime, selected_card_prices, color='blue')
+    ax.plot(selected_card_dates_datetime, selected_card_prices, color=colors[color_count])
+
+    # add card to legend_tuple
+    legend_tuple += (selected_card,)
+
     # set axes and title
-    ax.set(xlabel='Date', ylabel='Price (tix)', title=f'Price Data for {selected_card}')
+    ax.set(xlabel='Date', ylabel='Price (tix)')
     # format x-axis
     date_format = mdates.DateFormatter('%m-%d')
     ax.xaxis.set_major_formatter(date_format)
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
+    # format y-axis
+    ax.set_yscale('log')
+    # format legend
+    ax.legend(labels=legend_tuple)
+
     # show plot
-    plt.show()
+    canvas = FigureCanvasTkAgg(fig, window)
+    canvas.get_tk_widget().grid(row=3, column=1)
+
+    # increment color_count
+    color_count += 1
+
+def canvas_reset():
+    """Resets the canvas and other other variables"""
+    global canvas, fig, ax, color_count, legend_tuple, starting_card
+    canvas._tkcanvas.destroy()
+    fig, ax = plt.subplots(figsize=(20, 8))
+    color_count = 0
+    legend_tuple = ()
+    starting_card.set('Select a card to plot')
+
+# create frame for card dropdown and clear button
+frm_buttons = tk.Frame(master=window, borderwidth=5, bg=bg_color)
+frm_buttons.grid(row=2, column=1)
 
 # create dropdown for card price plotter
-drop_cards = tk.OptionMenu(window, starting_card, *scryfall_cards, command=card_price_plotter)
-drop_cards.grid(row=2, column=1)
+drop_cards = tk.OptionMenu(frm_buttons, starting_card, *scryfall_cards, command=card_price_plotter)
+drop_cards.config(bg=bg_color, fg=fg_text)
+drop_cards.pack(side=tk.LEFT)
+
+# create clear graph button
+btn_clear = tk.Button(frm_buttons, text='Clear graph', bg=bg_color, fg=fg_text, command=canvas_reset)
+btn_clear.pack(side=tk.LEFT)
+
+# end if window closed
+window.protocol('WM_DELETE_WINDOW', lambda: window.quit())
 
 window.mainloop()
