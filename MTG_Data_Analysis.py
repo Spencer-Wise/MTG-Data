@@ -5,6 +5,8 @@ import statistics as stats
 from datetime import datetime
 from datetime import date
 import tkinter as tk
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 import Cardhoarder_Scraper
 import Scryfall_API
@@ -16,7 +18,7 @@ today = datetime.now().date()
 
 #grab Scryfall price data
 file1 = open('ScryfallPriceData.json')
-data1 = json.load(file1)
+scryfall_data = json.load(file1)
 file1.close()
 
 #establish dicts for buy candidates and sell candidates
@@ -27,7 +29,7 @@ scryfall_buy_cans = {}
 x = 60
 
 #grab prices for each card and calculate the z score
-for card, dates in data1.items():
+for card, dates in scryfall_data.items():
     price_list = [price for price in dates.values()]
     prices = [float(price) for price in price_list]
     prices = prices[-x:]
@@ -51,13 +53,13 @@ print(f'Buy candidates- {scryfall_buy_cans}')
 
 #begin same process for MTGO Collection prices
 file2 = open('MTGOCollectionPrices.json')
-data2 = json.load(file2)
+mtgo_data = json.load(file2)
 file2.close()
 
 mtgo_sell_cans = {}
 mtgo_buy_cans = {}
 
-for card, dates in data2.items():
+for card, dates in mtgo_data.items():
     date_list, price_list = [date for date in dates.keys()], [price for price in dates.values()]
     last_date = date_list[-1].split('-')
     last_date_formatted = date(int(last_date[-1]), int(last_date[0]), int(last_date[1]))
@@ -86,6 +88,7 @@ print(f'Buy candidates- {mtgo_buy_cans}')
 
 # set up Tkinter window, frames, labels
 window = tk.Tk()
+window.title('MTG Card Price Analysis')
 window.rowconfigure([0,1], weight=1)
 window.columnconfigure([1], weight=1)
 
@@ -112,5 +115,50 @@ lbl_mtgo_sell_cans.pack()
 
 lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans}', wraplength=1440, justify='left')
 lbl_mtgo_buy_cans.pack()
+
+# create, grab, and sort all cards from scryfall
+scryfall_cards = []
+for card in scryfall_data.keys():
+    scryfall_cards.append(card)
+scryfall_cards = sorted(scryfall_cards)
+
+# assign starting variable to dropdown (below)
+starting_card = tk.StringVar()
+starting_card.set('Select a card to plot')
+
+def card_price_plotter(*args):
+    '''Plots the price of a chosen card from the dropdown menu.'''
+    # grab selected card from dropdown
+    selected_card = starting_card.get()
+    # grab data for selected card
+    selected_card_data = scryfall_data[selected_card]
+    # establish lists and populate them with the card date and prices
+    selected_card_dates, selected_card_prices = [], []
+    for date, price in selected_card_data.items():
+        selected_card_dates.append(date)
+        selected_card_prices.append(float(price))
+
+    # change date string to datetime type
+    selected_card_dates_datetime = []
+    for date in selected_card_dates:
+        selected_card_dates_datetime.append(datetime.strptime(date, '%m-%d-%y'))
+
+    # create plot
+    fig, ax = plt.subplots(figsize=(20, 10))
+
+    # plot dates, prices
+    ax.plot(selected_card_dates_datetime, selected_card_prices, color='blue')
+    # set axes and title
+    ax.set(xlabel='Date', ylabel='Price (tix)', title=f'Price Data for {selected_card}')
+    # format x-axis
+    date_format = mdates.DateFormatter('%m-%d')
+    ax.xaxis.set_major_formatter(date_format)
+    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
+    # show plot
+    plt.show()
+
+# create dropdown for card price plotter
+drop_cards = tk.OptionMenu(window, starting_card, *scryfall_cards, command=card_price_plotter)
+drop_cards.grid(row=2, column=1)
 
 window.mainloop()
