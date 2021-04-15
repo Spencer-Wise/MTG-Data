@@ -26,7 +26,7 @@ def CardPrice(url):
     price = info['prices']['tix']
     return full_name, price
 
-#test one card to see if data has changed since the last update
+# test one card to see if data has changed since the last update
 prices_MB = data["Mishra's Bauble CSP"]
 for v in prices_MB.values():
     prices_list = []
@@ -34,10 +34,10 @@ for v in prices_MB.values():
 recent_MB = prices_list[-1]
 current_MB = CardPrice('https://api.scryfall.com/cards/8a720448-017f-4f4a-9501-678245eaed17')[1]
 
-#establish a quit variable
+# establish a quit variable
 quit = 0
 
-#if the first test came back as price unchanged, check two other cards. If those prices haven't changed, end program
+# if the first test came back as price unchanged, check two other cards. If those prices haven't changed, end program
 if current_MB == recent_MB:
     print(recent_MB, 'vs', current_MB)
     print('MB\'s price hasn\'t changed. Looking at LOTV.')
@@ -62,10 +62,10 @@ if current_MB == recent_MB:
             quit = 1
 
 if quit == 0:
-    #print starting process to show card prices changed
+    # print starting process to show card prices changed
     print('Starting process')
 
-    #run through each URL and grab the card price
+    # run through each URL and grab the card price
     for url in urls:
         info = CardPrice(url)
         full_name = info[0]
@@ -73,7 +73,7 @@ if quit == 0:
         if price is None:
             print(f'{full_name} has no price.')
         else:
-            #try to add new data to previous data in json, else create a new dict key (for new cards)
+            # try to add new data to previous data in json, else create a new dict key (for new cards)
             try:
                 data[full_name][today] = price
             except:
@@ -81,7 +81,7 @@ if quit == 0:
                 data[full_name][today] = price
             time.sleep(0.15)
 
-    #dump the data back into the json
+    # dump the data back into the json
     file1 = open('ScryfallPriceData.json', 'w')
     json.dump(data, file1)
     file1.close()
