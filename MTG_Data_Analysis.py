@@ -5,15 +5,51 @@ import statistics as stats
 from datetime import datetime
 from datetime import date
 import tkinter as tk
+from tkinter.messagebox import askyesno
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from sys import exit
 
-if input('Do you want to scrape data? (y/n) ').strip().lower() == 'y':
+def on_exit(window):
+    """Asks for confirmation to exit"""
+    if askyesno('Exit confirmation', 'Are you sure you want to quit?'):
+        window.destroy()
+        exit()
+
+# create start window
+start_window = tk.Tk()
+start_window.title('Welcome')
+start_window.config(bg='gray37')
+
+def yes_press():
+    """Runs the Cardhoarder and Scryfall scripts if yes button is pushed."""
     import Cardhoarder_Scraper
     import Scryfall_API
+    start_window.destroy()
+    start_window.quit()
 
-print('\n')
+def no_press():
+    """Destroys and quits start window if no button is pushed."""
+    start_window.destroy()
+    start_window.quit()
+
+# create label and yes / no buttons
+txt_question = tk.Label(text='Do you want to scrape data?', bg='gray37', fg='white')
+txt_question.pack()
+
+frm_yes_no_buttons = tk.Frame(master=start_window)
+frm_yes_no_buttons.pack()
+
+btn_yes = tk.Button(master=frm_yes_no_buttons, text='Yes', width=20, height=5, command=yes_press, bg='gray60', fg='white')
+btn_yes.pack(side=tk.LEFT)
+
+btn_no = tk.Button(master=frm_yes_no_buttons, text='No', width=20, height=5, command=no_press, bg='gray60', fg='white')
+btn_no.pack(side=tk.LEFT)
+
+# open start window
+start_window.protocol('WM_DELETE_WINDOW', lambda: on_exit(start_window))
+start_window.mainloop()
 
 today = datetime.now().date()
 
@@ -46,17 +82,7 @@ for card, dates in scryfall_data.items():
     if zscore < -1.96:
         scryfall_buy_cans[card] = zscore
 
-# create sorted lists
-scryfall_sell_cans_sorted = sorted(scryfall_sell_cans, key=lambda k:scryfall_sell_cans[k], reverse=True)
-scryfall_buy_cans_sorted = sorted(scryfall_buy_cans, key=lambda k: scryfall_buy_cans[k])
-
-#print the buy and sell candidates according to the Scryfall data
-print('Scryfall data:')
-print(f'Sell candidates- {scryfall_sell_cans}')
-print('\n')
-print(f'Buy candidates- {scryfall_buy_cans}')
-
-#begin same process for MTGO Collection prices
+# begin same process for MTGO Collection prices
 file2 = open('MTGOCollectionPrices.json')
 mtgo_data = json.load(file2)
 file2.close()
@@ -85,15 +111,11 @@ for card, dates in mtgo_data.items():
     if zscore < -1.96 and delta.days < 10 and prices[-1 > 0.10]:
         mtgo_buy_cans[card] = zscore
 
-# create sorted lists
+# sort the buy and sell candidates by lowest and highest z-scores
+scryfall_sell_cans_sorted = sorted(scryfall_sell_cans, key=lambda k:scryfall_sell_cans[k], reverse=True)
+scryfall_buy_cans_sorted = sorted(scryfall_buy_cans, key=lambda k: scryfall_buy_cans[k])
 mtgo_sell_cans_sorted = sorted(mtgo_sell_cans, key=lambda k: mtgo_sell_cans[k], reverse=True)
 mtgo_buy_cans_sorted = sorted(mtgo_buy_cans, key=lambda k: mtgo_buy_cans[k])
-
-print('\n')
-print('Cardhoarder data:')
-print(f'Sell candidates- {mtgo_sell_cans}')
-print('\n')
-print(f'Buy candidates- {mtgo_buy_cans}')
 
 # set up Tkinter window, frames, labels
 window = tk.Tk()
@@ -152,7 +174,7 @@ color_count = 0
 legend_tuple = ()
 
 def card_price_plotter(*args):
-    '''Plots the price of a chosen card from the dropdown menu.'''
+    """Plots the price of a chosen card from the dropdown menu."""
     global canvas, fig, ax, color_count, legend_tuple
     # clear the canvas if it is not empty
     if canvas != None:
@@ -200,11 +222,14 @@ def card_price_plotter(*args):
 def canvas_reset():
     """Resets the canvas and other other variables"""
     global canvas, fig, ax, color_count, legend_tuple, starting_card
-    canvas._tkcanvas.destroy()
-    fig, ax = plt.subplots(figsize=(20, 8))
-    color_count = 0
-    legend_tuple = ()
-    starting_card.set('Select a card to plot')
+    try:
+        canvas._tkcanvas.destroy()
+        fig, ax = plt.subplots(figsize=(20, 8))
+        color_count = 0
+        legend_tuple = ()
+        starting_card.set('Select a card to plot')
+    except:
+        pass
 
 # create frame for card dropdown and clear button
 frm_buttons = tk.Frame(master=window, borderwidth=5, bg=bg_color)
@@ -220,6 +245,6 @@ btn_clear = tk.Button(frm_buttons, text='Clear graph', bg=bg_color, fg=fg_text, 
 btn_clear.pack(side=tk.LEFT)
 
 # end if window closed
-window.protocol('WM_DELETE_WINDOW', lambda: window.quit())
+window.protocol('WM_DELETE_WINDOW', lambda: on_exit(window))
 
 window.mainloop()
