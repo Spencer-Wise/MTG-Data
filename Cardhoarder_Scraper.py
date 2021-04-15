@@ -10,15 +10,15 @@ import time
 import json
 from datetime import datetime
 
-#grab current data from the json file
+# grab current data from the json file
 file1 = open('MTGOCollectionPrices.json')
 data = json.load(file1)
 file1.close()
 
-#get today's date
+# get today's date
 today = datetime.today().strftime('%m-%d-%Y')
 
-#set up browser through Selenium
+# set up browser through Selenium
 options = Options()
 options.add_argument('--incognito')
 options.add_argument('start-maximized')
@@ -27,10 +27,10 @@ options.add_experimental_option("excludeSwitches", ['enable-automation'])
 options.binary_location = binary_location
 browser = webdriver.Chrome(options = options, executable_path= executable_path)
 
-#set variable to keep track of pages
+# set variable to keep track of pages
 page_num = 1
 
-#start browser, navigate to Cardhoarder, log in, select/deselect filters
+# start browser, navigate to Cardhoarder, log in, select/deselect filters
 browser.execute_script(f"window.open('{ch_link}')")
 handles = browser.window_handles
 browser.switch_to.window(handles[-1])
@@ -57,13 +57,13 @@ browser.find_element_by_xpath('//*[@id="settings-panel"]/div[1]/div/a[1]').click
 
 browser.find_element_by_xpath('//*[@id="setting-toggles"]/div[1]/button[3]').click()
 
-#establish lists
+# establish lists
 prices = []
 cards = []
 sets = []
 foils = []
 
-#run through each page and grab the price data
+# run through each page and grab the price data
 while page_num <21:
     time.sleep(3)
     elems = browser.find_elements_by_xpath('//*[@id="cards-table"]/tbody/tr/td/a')
@@ -85,21 +85,21 @@ while page_num <21:
         else:
             foils.append('no')
 
-    #unless on the last page, navigate to the next page and start the process over
+    # unless on the last page, navigate to the next page and start the process over
     page_num += 1
     if page_num <21:
         browser.find_element_by_xpath('//*[@id="settings-panel"]/div[2]/ul/li[7]/a').click()
     else:
         pass
 
-#establish dictionary
+# establish dictionary
 pulled_card_data = {}
 pulled_card_data['cards'] = cards
 pulled_card_data['sets'] = sets
 pulled_card_data['foils'] = foils
 pulled_card_data['prices'] = prices
 
-#format the new data and add it to the previous data from json
+# format the new data and add it to the previous data from json
 for i in range(0, len(cards)):
     if pulled_card_data['foils'][i] == 'yes':
         name = pulled_card_data['cards'][i]
@@ -117,9 +117,11 @@ for i in range(0, len(cards)):
         data[card_name] = {}
         data[card_name][today] = price
 
-#dump the new data back to the json
+# dump the new data back to the json
 file1 = open('MTGOCollectionPrices.json', 'w')
 json.dump(data, file1)
 file1.close()
+
+browser.quit()
 
 print('Success')
