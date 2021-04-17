@@ -24,10 +24,10 @@ start_window.config(bg='gray37')
 
 def yes_press():
     """Runs the Cardhoarder and Scryfall scripts if yes button is pushed."""
-    import Cardhoarder_Scraper
-    import Scryfall_API
     start_window.destroy()
     start_window.quit()
+    import Cardhoarder_Scraper
+    import Scryfall_API
 
 def no_press():
     """Destroys and quits start window if no button is pushed."""
