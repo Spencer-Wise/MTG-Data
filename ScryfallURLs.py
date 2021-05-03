@@ -91,6 +91,27 @@ URLS = ["https://api.scryfall.com/cards/9e5b279e-4670-4a1e-87d0-3cab7e4f9e58", "
         "https://api.scryfall.com/cards/d25b13a4-6282-4426-8b01-9550f7d52d16", "https://api.scryfall.com/cards/63870c81-63bf-4a9a-aeb5-74c6eaded9f1",
         "https://api.scryfall.com/cards/75caefa7-94d5-472e-a540-daad3ee69899", "https://api.scryfall.com/cards/634cedb6-8b00-4f4b-8790-541188955295",
         "https://api.scryfall.com/cards/b57d97cf-2252-47f3-9eff-6003626bc900", "https://api.scryfall.com/cards/01a8576e-cadc-4521-aadd-3a05f0bc4d20",
-        "https://api.scryfall.com/cards/af3928b4-813a-4120-8799-de34235d60ac", "https://api.scryfall.com/cards/9b76bcd4-580a-4435-afe9-290940b1837f"]
+        "https://api.scryfall.com/cards/af3928b4-813a-4120-8799-de34235d60ac", "https://api.scryfall.com/cards/9b76bcd4-580a-4435-afe9-290940b1837f",
+        "https://api.scryfall.com/cards/b83cfbaa-7890-4f6f-878b-4edb45677371", "https://api.scryfall.com/cards/cfa7b456-7e83-4587-a875-9b35fde318c2",
+        "https://api.scryfall.com/cards/b9e6bf0b-bb39-4d0f-9035-a276e604f609", "https://api.scryfall.com/cards/225e3cc6-34d0-4f81-9f49-162d97e2ea59",
+        "https://api.scryfall.com/cards/0540ee72-6370-4f70-9526-6f441b3cac1e", "https://api.scryfall.com/cards/a54a2a30-b96a-49c7-9151-1f4b0d4a4413",
+        "https://api.scryfall.com/cards/72765559-0a78-4aa3-827e-cb4612720991", "https://api.scryfall.com/cards/cf825a56-4870-463a-a2ef-eec86be891db",
+        "https://api.scryfall.com/cards/924a24e7-91b8-4ceb-a136-7a765d98c994", "https://api.scryfall.com/cards/953610f6-ea96-4e71-969f-50ecac09c091",
+        "https://api.scryfall.com/cards/4dea7bcc-3ff8-40b0-8264-0cd678d6ff31", "https://api.scryfall.com/cards/179bd74b-c458-49d6-90ac-6075454e43dd",
+        "https://api.scryfall.com/cards/0a8b9d37-e89c-44ad-bd1b-51cb06ec3e0b", "https://api.scryfall.com/cards/17a278d0-f601-4d57-bc3d-2972f8602a69",
+        "https://api.scryfall.com/cards/ea7e4c65-b4c4-4795-9475-3cba71c50ea5", "https://api.scryfall.com/cards/4e4fb50c-a81f-44d3-93c5-fa9a0b37f617",
+        "https://api.scryfall.com/cards/56a2609d-b535-400b-81d9-72989a33c70f", "https://api.scryfall.com/cards/84d70487-21d1-4897-ac20-2a996e893b5b",
+        "https://api.scryfall.com/cards/60b2fae1-242b-45e0-a757-b1adc02c06f3", "https://api.scryfall.com/cards/301f13dd-39b8-4a93-9c05-3dc4fa1f1c75",
+        "https://api.scryfall.com/cards/866b7fd4-86e3-4b42-b1ea-33bad0db1f9f", "https://api.scryfall.com/cards/61bd69ea-1e9e-46b0-b1a1-ed7fdbe3deb6",
+        "https://api.scryfall.com/cards/997bc933-ac30-477b-a4e1-5333b796a99d", "https://api.scryfall.com/cards/39c431d7-d94b-46c4-bb89-f3db56214ab4",
+        "https://api.scryfall.com/cards/ad23cd0e-6871-4ba6-b5bf-cfd14f8f71b2", "https://api.scryfall.com/cards/a249b1f4-2b22-4b67-a207-e0c4ae95d2e1",
+        "https://api.scryfall.com/cards/02138fbb-3962-4348-8d31-faaefba0b8b2", "https://api.scryfall.com/cards/2b74bb81-fb9a-40e5-a941-e517430b52f5",
+        "https://api.scryfall.com/cards/748e6a61-9c1f-4225-9f04-e54002f63ac3", "https://api.scryfall.com/cards/cc520518-2063-4b57-a0d4-10cf62a7175e",
+        "https://api.scryfall.com/cards/e12573fe-aee3-49db-93e2-d00972cbb3b1", "https://api.scryfall.com/cards/b7919474-db2b-441a-b368-9e430ddf70ab",
+        "https://api.scryfall.com/cards/feccd0e2-fae6-4ced-acdf-4252ed5c56e7", "https://api.scryfall.com/cards/62dba377-7446-4517-a504-ee04568fd6cf",
+        "https://api.scryfall.com/cards/f31a6dfd-93d2-49c8-a357-9a707b9c42bd", "https://api.scryfall.com/cards/067fac91-2483-4678-b86a-2c54a3a480cf",
+        "https://api.scryfall.com/cards/d465597a-362e-4bd0-b547-f11d8807e597", "https://api.scryfall.com/cards/ca100248-fcd6-41ed-8d75-bcb473845edd",
+        "https://api.scryfall.com/cards/db75b77f-a230-4bad-b697-a40687671842", "https://api.scryfall.com/cards/7fc32f1d-dee7-4f71-a652-26a006e6020a",
+        "https://api.scryfall.com/cards/fd97b3cf-924e-4f77-bb82-0bf19592389f", "https://api.scryfall.com/cards/5047e271-fbf1-402c-9eb9-0806e5988f76"]
 
 NEWURLS = []
