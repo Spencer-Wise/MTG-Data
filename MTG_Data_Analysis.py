@@ -217,7 +217,10 @@ def card_price_plotter(*args):
     canvas.get_tk_widget().grid(row=3, column=1)
 
     # increment color_count
-    color_count += 1
+    if color_count == (len(colors) - 1):
+        color_count = 0
+    else:
+        color_count += 1
 
 def canvas_reset():
     """Resets the canvas and other other variables"""
