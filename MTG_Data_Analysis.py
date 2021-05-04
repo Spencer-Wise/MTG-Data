@@ -70,17 +70,18 @@ for card, dates in scryfall_data.items():
     price_list = [price for price in dates.values()]
     prices = [float(price) for price in price_list]
     prices = prices[-days:]
-    avg = stats.mean(prices)
-    std = stats.stdev(prices)
-    try:
-        zscore = (prices[-1]-avg)/std
-    except ZeroDivisionError:
-        zscore = 0
-    #if the zscore is above/below two std devs, add to the proper candidate list
-    if zscore > 1.96:
-        scryfall_sell_cans[card] = zscore
-    if zscore < -1.96:
-        scryfall_buy_cans[card] = zscore
+    if len(prices) >= days:
+        avg = stats.mean(prices)
+        std = stats.stdev(prices)
+        try:
+            zscore = (prices[-1]-avg)/std
+        except ZeroDivisionError:
+            zscore = 0
+        #if the zscore is above/below two std devs, add to the proper candidate list
+        if zscore > 1.96:
+            scryfall_sell_cans[card] = zscore
+        if zscore < -1.96:
+            scryfall_buy_cans[card] = zscore
 
 # begin same process for MTGO Collection prices
 file2 = open('MTGOCollectionPrices.json')
