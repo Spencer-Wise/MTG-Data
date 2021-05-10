@@ -4,10 +4,12 @@ import json
 import statistics as stats
 from datetime import datetime
 from datetime import date
+from tkinter import ttk
 import tkinter as tk
 from tkinter.messagebox import askyesno
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.ticker as mtickers
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sys import exit
 
@@ -158,9 +160,7 @@ lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_
 lbl_mtgo_buy_cans.pack()
 
 # create, grab, and sort all cards from scryfall
-scryfall_cards = []
-for card in scryfall_data.keys():
-    scryfall_cards.append(card)
+scryfall_cards = [card for card in scryfall_data.keys()]
 scryfall_cards = sorted(scryfall_cards)
 
 # assign starting variable to dropdown (below)
@@ -210,6 +210,7 @@ def card_price_plotter(*args):
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
     # format y-axis
     ax.set_yscale('log')
+    ax.yaxis.set_major_formatter(mtickers.ScalarFormatter())
     # format legend
     ax.legend(labels=legend_tuple)
 
@@ -239,10 +240,15 @@ def canvas_reset():
 frm_buttons = tk.Frame(master=window, borderwidth=5, bg=bg_color)
 frm_buttons.grid(row=2, column=1)
 
-# create dropdown for card price plotter
-drop_cards = tk.OptionMenu(frm_buttons, starting_card, *scryfall_cards, command=card_price_plotter)
-drop_cards.config(bg=bg_color, fg=fg_text)
-drop_cards.pack(side=tk.LEFT)
+# create and format dropdown for card price plotter
+combo_style = ttk.Style()
+combo_style.theme_create('combo_style', settings={'TCombobox': {'configure': {'selectbackground': bg_color, 'selectforeground': fg_text, 'fieldbackground': bg_color,'fieldforeground': fg_text, 'background': bg_color, 'foreground': fg_text}}})
+combo_style.theme_use('combo_style')
+combo_cards = ttk.Combobox(frm_buttons, textvariable=starting_card, values=scryfall_cards, width=54)
+combo_cards.bind("<<ComboboxSelected>>", card_price_plotter)
+frm_buttons.option_add("*TCombobox*Listbox*Background", bg_color)
+frm_buttons.option_add("*TCombobox*Listbox*Foreground", fg_text)
+combo_cards.pack(side=tk.LEFT)
 
 # create clear graph button
 btn_clear = tk.Button(frm_buttons, text='Clear graph', bg=bg_color, fg=fg_text, command=canvas_reset)
