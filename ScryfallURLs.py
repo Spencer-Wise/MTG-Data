@@ -112,6 +112,6 @@ URLS = ["https://api.scryfall.com/cards/9e5b279e-4670-4a1e-87d0-3cab7e4f9e58", "
         "https://api.scryfall.com/cards/f31a6dfd-93d2-49c8-a357-9a707b9c42bd", "https://api.scryfall.com/cards/067fac91-2483-4678-b86a-2c54a3a480cf",
         "https://api.scryfall.com/cards/d465597a-362e-4bd0-b547-f11d8807e597", "https://api.scryfall.com/cards/ca100248-fcd6-41ed-8d75-bcb473845edd",
         "https://api.scryfall.com/cards/db75b77f-a230-4bad-b697-a40687671842", "https://api.scryfall.com/cards/7fc32f1d-dee7-4f71-a652-26a006e6020a",
-        "https://api.scryfall.com/cards/fd97b3cf-924e-4f77-bb82-0bf19592389f", "https://api.scryfall.com/cards/5047e271-fbf1-402c-9eb9-0806e5988f76"]
-
-NEWURLS = []
+        "https://api.scryfall.com/cards/fd97b3cf-924e-4f77-bb82-0bf19592389f", "https://api.scryfall.com/cards/5047e271-fbf1-402c-9eb9-0806e5988f76",
+        "https://api.scryfall.com/cards/57948c65-4324-42bc-97ae-7cc700eb3817", "https://api.scryfall.com/cards/0ee4a931-5d61-49ba-affc-f022263938ca",
+        "https://api.scryfall.com/cards/c8212667-7e18-42a5-9f36-4f8a6ad12f83", "https://api.scryfall.com/cards/58da074a-a776-4e3f-be04-9e7f18320ae1"]
