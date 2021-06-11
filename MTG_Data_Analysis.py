@@ -109,9 +109,9 @@ for card, dates in mtgo_data.items():
         zscore = (prices[-1] - avg) / std
     except ZeroDivisionError:
         zscore = 0
-    if zscore > 1.96 and delta.days < 10 and prices[-1] > 0.10:
+    if zscore > 1.96 and delta.days < 5 and prices[-1] > 0.10:
         mtgo_sell_cans[card] = zscore
-    if zscore < -1.96 and delta.days < 10 and prices[-1 > 0.10]:
+    if zscore < -1.96 and delta.days < 5 and prices[-1 > 0.10]:
         mtgo_buy_cans[card] = zscore
 
 # sort the buy and sell candidates by lowest and highest z-scores
