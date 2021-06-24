@@ -31,11 +31,11 @@ def yes_press():
     try:
         import Cardhoarder_Scraper
     except:
-        pass
+        print('Unable to complete scraping of CH data.')
     try:
         import Scryfall_API
     except:
-        pass
+        print('Unable to complete collection of data from Scryfall.')
 
 def no_press():
     """Destroys and quits start window if no button is pushed."""
