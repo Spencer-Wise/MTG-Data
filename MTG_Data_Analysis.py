@@ -13,16 +13,19 @@ import matplotlib.ticker as mtickers
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sys import exit
 
+
 def on_exit(window):
     """Asks for confirmation to exit"""
     if askyesno('Exit confirmation', 'Are you sure you want to quit?'):
         window.destroy()
         exit()
 
+
 # create start window
 start_window = tk.Tk()
 start_window.title('Welcome')
 start_window.config(bg='gray37')
+
 
 def yes_press():
     """Runs the Cardhoarder and Scryfall scripts if yes button is pushed."""
@@ -30,17 +33,21 @@ def yes_press():
     start_window.quit()
     try:
         import Cardhoarder_Scraper
-    except:
-        print('Unable to complete scraping of CH data.')
+    except Exception as error:
+        print('Unable to complete scraping of CH data:')
+        print(error)
     try:
         import Scryfall_API
-    except:
-        print('Unable to complete collection of data from Scryfall.')
+    except Exception as error:
+        print('Unable to complete collection of data from Scryfall:')
+        print(error)
+
 
 def no_press():
     """Destroys and quits start window if no button is pushed."""
     start_window.destroy()
     start_window.quit()
+
 
 # create label and yes / no buttons
 txt_question = tk.Label(text='Do you want to scrape data?', bg='gray37', fg='white')
@@ -85,7 +92,7 @@ for card, dates in scryfall_data.items():
             zscore = (prices[-1]-avg)/std
         except ZeroDivisionError:
             zscore = 0
-        #if the zscore is above/below two std devs, add to the proper candidate list
+        # if the zscore is above/below two std devs, add to the proper candidate list
         if zscore > 1.96:
             scryfall_sell_cans[card] = zscore
         if zscore < -1.96:
@@ -165,7 +172,7 @@ lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_
                              fg=fg_text)
 lbl_mtgo_buy_cans.pack()
 
-# create, grab, and sort all cards from scryfall
+# create, grab, and sort all cards from Scryfall
 scryfall_cards = [card for card in scryfall_data.keys()]
 scryfall_cards = sorted(scryfall_cards)
 
@@ -179,6 +186,7 @@ fig, ax = plt.subplots(figsize=(20, 8))
 colors = ['blue', 'red', 'green', 'purple', 'darkorange', 'saddlebrown', 'slategrey', 'deepskyblue', 'gold']
 color_count = 0
 legend_tuple = ()
+
 
 def card_price_plotter(*args):
     """Plots the price of a chosen card from the dropdown menu."""
@@ -230,6 +238,7 @@ def card_price_plotter(*args):
     else:
         color_count += 1
 
+
 def canvas_reset():
     """Resets the canvas and other other variables"""
     global canvas, fig, ax, color_count, legend_tuple, starting_card
@@ -241,6 +250,7 @@ def canvas_reset():
         starting_card.set('Select a card to plot')
     except:
         pass
+
 
 # create frame for card dropdown and clear button
 frm_buttons = tk.Frame(master=window, borderwidth=5, bg=bg_color)
