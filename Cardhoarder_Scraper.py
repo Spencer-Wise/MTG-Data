@@ -43,13 +43,13 @@ elem.send_keys(ch_pw)
 browser.find_element_by_xpath('//input[@class="btn btn-lg btn-primary"][@value="Log In"]').click()
 assert 'Your Cardhoarder Dashboard' in browser.title
 browser.find_element_by_xpath('//a[@href="/card-keeper"]').click()
-time.sleep(2)
+time.sleep(3)
 elems = browser.find_elements_by_xpath(
     '//button[@class="btn btn-sm btn-default dropdown-toggle"][@data-toggle="dropdown"]')
-time.sleep(0.5)
+time.sleep(1)
 elems[0].click()
 browser.find_element_by_xpath('//*[@id="setting-toggles"]/div[2]/ul/li[4]/a').click()
-time.sleep(2)
+time.sleep(3)
 elems[1].click()
 browser.find_element_by_xpath('//*[@id="setting-toggles"]/div[3]/ul/li[3]/a').click()
 browser.find_element_by_xpath('//*[@id="active-filters"]/div[2]/a/span').click()
@@ -65,7 +65,7 @@ foils = []
 
 # run through each page and grab the price data
 while page_num <21:
-    time.sleep(3)
+    time.sleep(5)
     elems = browser.find_elements_by_xpath('//*[@id="cards-table"]/tbody/tr/td/a')
     for element in elems:
         cards.append(element.get_attribute('innerHTML'))
