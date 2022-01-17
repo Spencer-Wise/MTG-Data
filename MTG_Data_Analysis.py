@@ -31,11 +31,11 @@ def yes_press():
     """Runs the Cardhoarder and Scryfall scripts if yes button is pushed."""
     start_window.destroy()
     start_window.quit()
-    try:
-        import Cardhoarder_Scraper
-    except Exception as error:
-        print('Unable to complete scraping of CH data:')
-        print(error)
+    # try:
+    #     import Cardhoarder_Scraper
+    # except Exception as error:
+    #     print('Unable to complete scraping of CH data:')
+    #     print(error)
     try:
         import Scryfall_API
     except Exception as error:
@@ -98,40 +98,40 @@ for card, dates in scryfall_data.items():
         if zscore < -1.96:
             scryfall_buy_cans[card] = zscore
 
-# begin same process for MTGO Collection prices
-file2 = open('MTGOCollectionPrices.json')
-mtgo_data = json.load(file2)
-file2.close()
-
-mtgo_sell_cans = {}
-mtgo_buy_cans = {}
-
-for card, dates in mtgo_data.items():
-    date_list, price_list = [date for date in dates.keys()], [price for price in dates.values()]
-    last_date = date_list[-1].split('-')
-    last_date_formatted = date(int(last_date[-1]), int(last_date[0]), int(last_date[1]))
-    delta = today - last_date_formatted
-    prices = [float(price) for price in price_list]
-    prices = prices[-days:]
-    avg = stats.mean(prices)
-    if len(prices) > 1:
-        std = stats.stdev(prices)
-    else:
-        pass
-    try:
-        zscore = (prices[-1] - avg) / std
-    except ZeroDivisionError:
-        zscore = 0
-    if zscore > 1.96 and delta.days < 5 and prices[-1] > 0.10:
-        mtgo_sell_cans[card] = zscore
-    if zscore < -1.96 and delta.days < 5 and prices[-1 > 0.10]:
-        mtgo_buy_cans[card] = zscore
+# # begin same process for MTGO Collection prices
+# file2 = open('MTGOCollectionPrices.json')
+# mtgo_data = json.load(file2)
+# file2.close()
+#
+# mtgo_sell_cans = {}
+# mtgo_buy_cans = {}
+#
+# for card, dates in mtgo_data.items():
+#     date_list, price_list = [date for date in dates.keys()], [price for price in dates.values()]
+#     last_date = date_list[-1].split('-')
+#     last_date_formatted = date(int(last_date[-1]), int(last_date[0]), int(last_date[1]))
+#     delta = today - last_date_formatted
+#     prices = [float(price) for price in price_list]
+#     prices = prices[-days:]
+#     avg = stats.mean(prices)
+#     if len(prices) > 1:
+#         std = stats.stdev(prices)
+#     else:
+#         pass
+#     try:
+#         zscore = (prices[-1] - avg) / std
+#     except ZeroDivisionError:
+#         zscore = 0
+#     if zscore > 1.96 and delta.days < 5 and prices[-1] > 0.10:
+#         mtgo_sell_cans[card] = zscore
+#     if zscore < -1.96 and delta.days < 5 and prices[-1 > 0.10]:
+#         mtgo_buy_cans[card] = zscore
 
 # sort the buy and sell candidates by lowest and highest z-scores
 scryfall_sell_cans_sorted = sorted(scryfall_sell_cans, key=lambda k:scryfall_sell_cans[k], reverse=True)
 scryfall_buy_cans_sorted = sorted(scryfall_buy_cans, key=lambda k: scryfall_buy_cans[k])
-mtgo_sell_cans_sorted = sorted(mtgo_sell_cans, key=lambda k: mtgo_sell_cans[k], reverse=True)
-mtgo_buy_cans_sorted = sorted(mtgo_buy_cans, key=lambda k: mtgo_buy_cans[k])
+# mtgo_sell_cans_sorted = sorted(mtgo_sell_cans, key=lambda k: mtgo_sell_cans[k], reverse=True)
+# mtgo_buy_cans_sorted = sorted(mtgo_buy_cans, key=lambda k: mtgo_buy_cans[k])
 
 # set up Tkinter window, frames, labels
 window = tk.Tk()
@@ -158,19 +158,19 @@ lbl_scryfall_buy_cans = tk.Label(master=frm_scryfall, text=f'Buy candidates - {s
                                  bg=bg_color, fg=fg_text)
 lbl_scryfall_buy_cans.pack()
 
-frm_mtgo = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5, bg=bg_color)
-frm_mtgo.grid(row=1, column=1, sticky='nsew', padx=10, pady=10)
-
-lbl_mtgo_title = tk.Label(master=frm_mtgo, text='MTGO data:', font='bold', fg='steel blue', bg=bg_color)
-lbl_mtgo_title.pack()
-
-lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
-                              fg=fg_text)
-lbl_mtgo_sell_cans.pack()
-
-lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
-                             fg=fg_text)
-lbl_mtgo_buy_cans.pack()
+# frm_mtgo = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=5, bg=bg_color)
+# frm_mtgo.grid(row=1, column=1, sticky='nsew', padx=10, pady=10)
+#
+# lbl_mtgo_title = tk.Label(master=frm_mtgo, text='MTGO data:', font='bold', fg='steel blue', bg=bg_color)
+# lbl_mtgo_title.pack()
+#
+# lbl_mtgo_sell_cans = tk.Label(master=frm_mtgo, text=f'Sell candidates - {mtgo_sell_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
+#                               fg=fg_text)
+# lbl_mtgo_sell_cans.pack()
+#
+# lbl_mtgo_buy_cans = tk.Label(master=frm_mtgo, text=f'Buy candidates - {mtgo_buy_cans_sorted}', wraplength=1440, justify='left', bg=bg_color,
+#                              fg=fg_text)
+# lbl_mtgo_buy_cans.pack()
 
 # create, grab, and sort all cards from Scryfall
 scryfall_cards = [card for card in scryfall_data.keys()]
